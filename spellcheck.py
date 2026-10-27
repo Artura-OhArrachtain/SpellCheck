@@ -105,7 +105,7 @@ def check_grammar(text):
     return tool.check(text)
 
 
-def report(text, use_color=None):
+def report(text, use_color=None, no_grammar=False):
     """Print a combined spelling + grammar report for the text."""
     use_color = _use_color(use_color)
     print("=" * 60)
@@ -121,7 +121,7 @@ def report(text, use_color=None):
         print(f"  - {item['word']!r} ({pos}) -> {suggestions}")
 
     # Grammar
-    matches = check_grammar(text)
+    matches = [] if no_grammar else check_grammar(text)
     print(f"\nGRAMMAR / STYLE: {len(matches)} issue(s)")
     for m in matches:
         excerpt = text[m.offset : m.offset + m.error_length]
@@ -198,9 +198,9 @@ def main(argv=None):
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             text = path.read_text(errors="replace")
-        report(text, use_color=use_color)
+        report(text, use_color=use_color, no_grammar=args.no_grammar)
     elif args.text:
-        report(args.text, use_color=use_color)
+        report(args.text, use_color=use_color, no_grammar=args.no_grammar)
     else:
         interactive()
 
