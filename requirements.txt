@@ -1,0 +1,5 @@
+# Core (required)
+pyspellchecker>=0.8,<1.0
+
+# Grammar checking (optional but recommended - needs Java 8+ on the machine)
+language-tool-python>=3.3,<4.0
