@@ -8,15 +8,23 @@ LanguageTool downloads its server files, which are cached for later runs.
 
 ## Install
 
-Install the package from PyPI:
+Requires Python 3.8 or newer. Install from PyPI on Windows:
 
-```sh
-python -m pip install spellcheck-cli
+```powershell
+py -m pip install spellcheck-cli
 ```
 
-The package installs both Python dependencies. Java is a separate requirement
-for grammar checks. Spelling checks work without Java, and grammar checking can
-be skipped with `--no-grammar` for text and file checks.
+On macOS or Linux:
+
+```sh
+python3 -m pip install spellcheck-cli
+```
+
+These commands install the CLI and HTTP server commands. If your system blocks
+global package installs, create and activate a virtual environment first, then
+run the same pip command inside it. Java 8 or newer is only needed for grammar
+checks; spelling works without Java, and grammar can be skipped with
+`--no-grammar` for text and file checks.
 
 ## Usage
 
