@@ -36,6 +36,29 @@ Run interactively by starting `spellcheck` without arguments. Use `--no-color`
 to disable colored output, `--color` to force it, or `--no-grammar` to skip
 grammar and style checks.
 
+## HTTP API
+
+Start the local HTTP server with:
+
+```sh
+spellcheck-server --host 127.0.0.1 --port 8000
+```
+
+The server provides GET /health and POST /check. The check endpoint accepts
+JSON with a required text string and an optional grammar boolean (defaults to
+true):
+
+```sh
+curl -X POST http://127.0.0.1:8000/check \
+  -H 'Content-Type: application/json' \
+  -d '{"text":"This are an example sentence.","grammar":false}'
+```
+
+The response contains spelling and grammar result arrays. When grammar
+checking cannot start, the response includes a warning and still returns
+spelling results. The server binds to loopback by default; use --host 0.0.0.0
+only when you intend to make it reachable from other machines.
+
 ## Development
 
 Install the package and development dependencies, then run the test suite:

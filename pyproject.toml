@@ -33,13 +33,14 @@ dependencies = [
 
 [project.scripts]
 spellcheck = "spellcheck_cli:main"
+spellcheck-server = "spellcheck_api:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=7"]
 
 [tool.setuptools]
 package-dir = { "" = "src" }
-py-modules = ["spellcheck_cli"]
+py-modules = ["spellcheck_cli", "spellcheck_api"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
