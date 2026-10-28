@@ -1,10 +1,10 @@
-# Spellcheck CLI
+# Spellcheck
 
-An offline-capable command-line spelling and grammar checker for Python 3.8 and
-newer. Spelling checks use `pyspellchecker`. Grammar and style checks use a
-local LanguageTool server started by `language-tool-python` and require Java
-8 or newer. On first use, LanguageTool downloads its server files; they are
-cached for later runs.
+A command-line spelling and grammar checker with an optional local HTTP API,
+for Python 3.8 and newer. Spelling checks use `pyspellchecker`. Grammar and
+style checks use a local LanguageTool server started by
+`language-tool-python`; they require Java 8 or newer. On first use,
+LanguageTool downloads its server files, which are cached for later runs.
 
 ## Install
 
@@ -14,9 +14,9 @@ Install the package from PyPI:
 python -m pip install spellcheck-cli
 ```
 
-The package includes both spelling and grammar dependencies. To run spelling
-checks without grammar support, install `pyspellchecker` and run the source
-script, or pass `--no-grammar` to the CLI.
+The package installs both Python dependencies. Java is a separate requirement
+for grammar checks. Spelling checks work without Java, and grammar checking can
+be skipped with `--no-grammar` for text and file checks.
 
 ## Usage
 
@@ -32,9 +32,9 @@ Check a UTF-8 text file:
 spellcheck --file document.txt
 ```
 
-Run interactively by starting `spellcheck` without arguments. Use `--no-color`
-to disable colored output, `--color` to force it, or `--no-grammar` to skip
-grammar and style checks.
+Run interactively by starting `spellcheck` without arguments. For text and
+file checks, use `--no-color` to disable colored output, `--color` to force it,
+or `--no-grammar` to skip grammar and style checks.
 
 ## HTTP API
 
@@ -44,9 +44,9 @@ Start the local HTTP server with:
 spellcheck-server --host 127.0.0.1 --port 8000
 ```
 
-The server provides GET /health and POST /check. The check endpoint accepts
-JSON with a required text string and an optional grammar boolean (defaults to
-true):
+The server provides `GET /health`, which returns `{"status":"ok"}`, and
+`POST /check`. The check endpoint accepts a JSON object with a required `text`
+string and an optional `grammar` boolean (defaults to `true`):
 
 ```sh
 curl -X POST http://127.0.0.1:8000/check \
@@ -54,10 +54,16 @@ curl -X POST http://127.0.0.1:8000/check \
   -d '{"text":"This are an example sentence.","grammar":false}'
 ```
 
-The response contains spelling and grammar result arrays. When grammar
-checking cannot start, the response includes a warning and still returns
-spelling results. The server binds to loopback by default; use --host 0.0.0.0
-only when you intend to make it reachable from other machines.
+The response contains `spelling` and `grammar` arrays. Each spelling result
+has `word`, `position`, and `suggestions`; each grammar result has `offset`,
+`length`, `message`, `issue_type`, and `replacements`. If grammar checking
+cannot start, `grammar` is empty and the response includes a `warning`; spelling
+results are still returned. Invalid requests return an error with HTTP 400,
+unknown paths return 404, and request bodies are limited to 1 MB.
+
+The server binds to `127.0.0.1` by default and does not provide authentication
+or browser cross-origin access. Use `--host 0.0.0.0` only when you intend to
+make it reachable from other machines and have secured access separately.
 
 ## Development
 
