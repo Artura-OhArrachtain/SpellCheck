@@ -46,11 +46,16 @@ or `--no-grammar` to skip grammar and style checks.
 
 ## HTTP API
 
-Start the local HTTP server with:
+Start the local server with:
 
 ```sh
 spellcheck-server --host 127.0.0.1 --port 8000
 ```
+
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in a browser to use the
+simple interface: paste text, choose whether to check grammar, and view issues
+and suggestions. The interface calls the local API; no separate frontend setup
+is needed.
 
 The server provides `GET /health`, which returns `{"status":"ok"}`, and
 `POST /check`. The check endpoint accepts a JSON object with a required `text`
