@@ -78,6 +78,25 @@ The server binds to `127.0.0.1` by default and does not provide authentication
 or browser cross-origin access. Use `--host 0.0.0.0` only when you intend to
 make it reachable from other machines and have secured access separately.
 
+## Linux desktop app
+
+From the project directory, install this version for your user:
+
+```sh
+python3 -m pip install --user .
+```
+
+This installs a **Spellcheck** launcher in the Linux application menu. It
+starts the local server and opens the interface in your browser. You can also
+start it from a terminal with `spellcheck-desktop`.
+
+## Firefox extension
+
+The extension is in `extension/firefox`. Start the Linux app (or
+`spellcheck-server`), then follow the temporary installation steps in
+[`extension/firefox/README.md`](extension/firefox/README.md). A Mozilla-signed
+add-on is required for permanent installation.
+
 ## Development
 
 Install the package and development dependencies, then run the test suite:

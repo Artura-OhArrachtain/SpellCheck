@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Spellcheck",
+  "version": "1.0.0",
+  "description": "Check spelling and grammar with your local Spellcheck app.",
+  "action": {
+    "default_title": "Spellcheck",
+    "default_popup": "popup.html"
+  },
+  "host_permissions": [
+    "http://127.0.0.1:8000/*"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "spellcheck-local@spellcheck-cli",
+      "strict_min_version": "109.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
+}

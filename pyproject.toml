@@ -34,13 +34,17 @@ dependencies = [
 [project.scripts]
 spellcheck = "spellcheck_cli:main"
 spellcheck-server = "spellcheck_api:main"
+spellcheck-desktop = "spellcheck_desktop:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=7"]
 
 [tool.setuptools]
 package-dir = { "" = "src" }
-py-modules = ["spellcheck_cli", "spellcheck_api"]
+py-modules = ["spellcheck_cli", "spellcheck_api", "spellcheck_desktop"]
+
+[tool.setuptools.data-files]
+"share/applications" = ["packaging/linux/spellcheck.desktop"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

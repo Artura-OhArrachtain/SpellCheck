@@ -1,0 +1,14 @@
+:root { color-scheme: light dark; font: 14px/1.45 system-ui, sans-serif; }
+body { width: 350px; margin: 0; }
+main { padding: 16px; }
+h1 { font-size: 20px; margin: 0 0 12px; }
+textarea { box-sizing: border-box; display: block; width: 100%; min-height: 130px;
+  margin-top: 5px; padding: 9px; border: 1px solid #8888; border-radius: 7px; font: inherit; }
+.toggle { display: flex; align-items: center; gap: 6px; margin: 10px 0; }
+button { width: 100%; padding: 9px; border: 0; border-radius: 7px; background: #2463eb;
+  color: white; font: inherit; font-weight: 650; cursor: pointer; }
+button:disabled { opacity: .6; cursor: wait; }
+#status { min-height: 1.4em; }
+.warning { padding: 8px; border-left: 3px solid #d89000; }
+.issue { padding: 8px 0; border-top: 1px solid #8885; }
+.issue strong, .issue span { display: block; }

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Spellcheck
+Comment=Check spelling and grammar locally
+Exec=spellcheck-desktop
+TryExec=spellcheck-desktop
+Icon=accessories-text-editor
+Terminal=false
+Categories=Office;Utility;TextEditor;
+StartupNotify=true
