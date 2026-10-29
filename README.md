@@ -105,7 +105,6 @@ issuer `https://token.actions.githubusercontent.com`, audience
 this GitHub repository). Grant that identity permission to configure and deploy
 the Web App. Then add these GitHub Actions repository secrets:
 
-- `AZURE_CLIENT_ID`
 - `AZURE_TENANT_ID`
 - `AZURE_SUBSCRIPTION_ID`
 - `AZURE_RESOURCE_GROUP`
@@ -129,6 +128,26 @@ The extension is in `extension/firefox`. Start the Linux app (or
 `spellcheck-server`), then follow the temporary installation steps in
 [`extension/firefox/README.md`](extension/firefox/README.md). A Mozilla-signed
 add-on is required for permanent installation.
+
+## Android app
+
+The native Android client is in `android`. It connects to the same Python HTTP
+API; enter the base URL of your deployed API (for example,
+`https://YOUR_APP.azurewebsites.net`) in the app. The address is saved on the
+device. Android 6.0 or newer is required.
+
+GitHub Actions builds a debug APK and uploads it as the
+`spellcheck-android-debug` artifact. The Android workflow also prints the APK's
+debug signing certificate SHA-256 fingerprint. For local builds, install JDK
+17, Android SDK platform 35, and Gradle 8.9, then run:
+
+```sh
+gradle -p android assembleDebug
+```
+
+The debug certificate fingerprint is for development only. A Play Store
+release uses the release signing certificate (or the Play App Signing
+certificate), which has a different fingerprint.
 
 ## Development
 

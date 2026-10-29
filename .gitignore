@@ -9,6 +9,13 @@ venv/
 .pytest_cache/
 .coverage
 
+# Android / Gradle
+.gradle/
+local.properties
+**/build/
+*.jks
+*.keystore
+
 # LanguageTool cache (~260 MB server download)
 .languagetool*
 .languagetool_python/
