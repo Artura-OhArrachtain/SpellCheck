@@ -105,6 +105,7 @@ issuer `https://token.actions.githubusercontent.com`, audience
 this GitHub repository). Grant that identity permission to configure and deploy
 the Web App. Then add these GitHub Actions repository secrets:
 
+- `AZURE_CLIENT_ID` (set this to the client ID provided for this app)
 - `AZURE_TENANT_ID`
 - `AZURE_SUBSCRIPTION_ID`
 - `AZURE_RESOURCE_GROUP`
