@@ -92,10 +92,14 @@ start it from a terminal with `spellcheck-desktop`.
 
 ## Azure App Service
 
-The GitHub Actions workflow deploys to an existing **Linux Python Web App**
-after tests pass on pushes to `main`. Configure a federated identity in
-Microsoft Entra for this repository's `main` branch, then add these GitHub
-Actions repository secrets:
+The GitHub Actions workflow in
+[`python-app.yml`](.github/workflows/python-app.yml) deploys this project as a
+single **Linux Python Web App** after CI passes on pushes to `main`. This app
+serves both the HTTP API and its browser interface; the interface's JavaScript
+runs in the browser and does not need a separate Node.js app or runtime.
+Create a Linux Web App using the Python 3.12 stack. Configure a federated
+identity in Microsoft Entra for this repository's `main` branch, then add
+these GitHub Actions repository secrets:
 
 - `AZURE_CLIENT_ID`
 - `AZURE_TENANT_ID`
@@ -110,8 +114,9 @@ Service host and port automatically; on a local machine it continues to bind
 to `127.0.0.1` by default. See Microsoft's
 [OIDC setup guide](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect)
 for the identity and federated credential setup. Spelling works in the Python
-runtime; grammar checks additionally require Java 8 or newer in the App Service
-environment.
+runtime. Grammar checks also require Java 8 or newer; if Java is unavailable
+in the App Service environment, the API returns spelling results and a grammar
+availability warning.
 
 ## Firefox extension
 
