@@ -105,17 +105,46 @@ address for a remotely hosted server. The address is saved on the device.
 Android 6.0 or newer is required.
 
 GitHub Actions builds a debug APK and uploads it as the
-`spellcheck-android-debug` artifact. The Android workflow also prints the APK's
-debug signing certificate SHA-256 fingerprint. For local builds, install JDK
-17, Android SDK platform 35, and Gradle 8.9, then run:
+`spellcheck-android-debug` artifact. Pushing a tag such as `v1.0.0` publishes a
+signed release APK, its SHA-256 checksum, and signing certificate fingerprint
+as GitHub Release assets. Publish by tagging a release and pushing the tag, for
+example `git tag v1.0.0 && git push origin v1.0.0`. Before publishing, add
+these GitHub Actions repository secrets for a persistent Android signing key:
+
+- `ANDROID_SIGNING_KEYSTORE_BASE64` — base64-encoded JKS/PKCS12 keystore
+- `ANDROID_SIGNING_KEY_ALIAS`
+- `ANDROID_SIGNING_STORE_PASSWORD`
+- `ANDROID_SIGNING_KEY_PASSWORD`
+
+Generate and encode the keystore locally with `keytool` and `base64`, then add
+the encoded value as a secret. Keep the keystore and passwords private; do not
+commit them to the repository. The workflow prints the debug APK's certificate
+fingerprint on normal CI runs, and the release certificate fingerprint with
+the signed release assets. For local debug builds, install JDK 17, Android SDK
+platform 35, and Gradle 8.9, then run:
 
 ```sh
 gradle -p android assembleDebug
 ```
 
-The debug certificate fingerprint is for development only. A Play Store
-release uses the release signing certificate (or the Play App Signing
-certificate), which has a different fingerprint.
+Create a private release key and encode it on Linux:
+
+```sh
+keytool -genkeypair -v -keystore spellcheck-release.p12 -alias spellcheck \
+  -keyalg RSA -keysize 2048 -validity 10000
+base64 -w 0 spellcheck-release.p12
+```
+
+Copy the encoded output into the GitHub secret. Keep the original keystore
+offline and backed up; it must remain the same for future signed updates.
+
+For local API development, start `spellcheck-server --host 0.0.0.0`, then use
+`http://10.0.2.2:8000` in the Android emulator. Debug builds permit HTTP for
+this local development case; builds intended for distribution require HTTPS.
+GitHub release APKs are built with the configured release signing key and can
+be installed by sideloading. If you later publish through Google Play, configure
+Play App Signing and use the Play app-signing certificate fingerprint for
+services that verify app signatures.
 
 ## Development
 

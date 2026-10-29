@@ -101,8 +101,10 @@ public final class MainActivity extends Activity {
     private void submitCheck() {
         String baseUrl = apiUrlInput.getText().toString().trim().replaceAll("/+$", "");
         String text = textInput.getText().toString();
-        if (!baseUrl.startsWith("https://")) {
-            statusView.setText("Enter a secure API address beginning with https://.");
+        boolean secureUrl = baseUrl.startsWith("https://");
+        boolean debugHttpUrl = BuildConfig.ALLOW_HTTP && baseUrl.startsWith("http://");
+        if (!secureUrl && !debugHttpUrl) {
+            statusView.setText("Use an HTTPS API address. Debug builds also allow HTTP.");
             return;
         }
         if (text.trim().isEmpty()) {
@@ -149,11 +151,19 @@ public final class MainActivity extends Activity {
         connection.setDoOutput(true);
         connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
         byte[] payload = body.toString().getBytes(StandardCharsets.UTF_8);
+        if (payload.length > 1_000_000) {
+            connection.disconnect();
+            throw new Exception("Text is too large. Keep the request under 1 MB.");
+        }
         try (OutputStream output = connection.getOutputStream()) {
             output.write(payload);
         }
         int code = connection.getResponseCode();
         InputStream stream = code >= 400 ? connection.getErrorStream() : connection.getInputStream();
+        if (stream == null) {
+            connection.disconnect();
+            throw new Exception("The API returned HTTP " + code + " without a response body.");
+        }
         String responseText;
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(stream, StandardCharsets.UTF_8))) {

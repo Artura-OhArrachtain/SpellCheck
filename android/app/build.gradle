@@ -6,11 +6,37 @@ android {
     namespace 'com.spellcheck.app'
     compileSdk 35
 
+    buildFeatures {
+        buildConfig true
+    }
+
     defaultConfig {
         applicationId 'com.spellcheck.app'
         minSdk 23
         targetSdk 35
-        versionCode 1
-        versionName '1.0.0'
+        versionCode (project.findProperty('appVersionCode') ?: '1').toInteger()
+        versionName project.findProperty('appVersionName') ?: '1.0.0'
+    }
+
+    signingConfigs {
+        release {
+            def keystorePath = System.getenv('ANDROID_KEYSTORE_PATH')
+            if (keystorePath) {
+                storeFile file(keystorePath)
+                storePassword System.getenv('ANDROID_STORE_PASSWORD')
+                keyAlias System.getenv('ANDROID_KEY_ALIAS')
+                keyPassword System.getenv('ANDROID_KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField 'boolean', 'ALLOW_HTTP', 'true'
+        }
+        release {
+            buildConfigField 'boolean', 'ALLOW_HTTP', 'false'
+            signingConfig signingConfigs.release
+        }
     }
 }
