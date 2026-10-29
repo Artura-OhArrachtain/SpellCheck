@@ -97,9 +97,13 @@ The GitHub Actions workflow in
 single **Linux Python Web App** after CI passes on pushes to `main`. This app
 serves both the HTTP API and its browser interface; the interface's JavaScript
 runs in the browser and does not need a separate Node.js app or runtime.
-Create a Linux Web App using the Python 3.12 stack. Configure a federated
-identity in Microsoft Entra for this repository's `main` branch, then add
-these GitHub Actions repository secrets:
+Create a Linux Web App using the Python 3.12 stack. In Microsoft Entra, create
+an app registration or service principal and add a federated credential with
+issuer `https://token.actions.githubusercontent.com`, audience
+`api://AzureADTokenExchange`, and subject
+`repo:OWNER/REPOSITORY:ref:refs/heads/main` (replace `OWNER/REPOSITORY` with
+this GitHub repository). Grant that identity permission to configure and deploy
+the Web App. Then add these GitHub Actions repository secrets:
 
 - `AZURE_CLIENT_ID`
 - `AZURE_TENANT_ID`
@@ -107,11 +111,12 @@ these GitHub Actions repository secrets:
 - `AZURE_RESOURCE_GROUP`
 - `AZURE_WEBAPP_NAME`
 
-The identity needs permission to configure and deploy the target Web App. The
-workflow configures the Web App for Python 3.12, enables App Service build
-automation, and sets the server startup command. The server binds to the App
-Service host and port automatically; on a local machine it continues to bind
-to `127.0.0.1` by default. See Microsoft's
+The workflow configures the Web App for Python 3.12, enables App Service build
+automation, and sets the server startup command. It deploys after a successful
+push to `main`; you can also start it manually from the Actions tab while
+selecting `main`. The server binds to the App Service host and port
+automatically; on a local machine it continues to bind to `127.0.0.1` by
+default. See Microsoft's
 [OIDC setup guide](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect)
 for the identity and federated credential setup. Spelling works in the Python
 runtime. Grammar checks also require Java 8 or newer; if Java is unavailable
