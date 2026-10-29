@@ -1,9 +1,10 @@
 # Firefox extension
 
-This popup sends text to the local Spellcheck API at `http://127.0.0.1:8000`.
-Start the Linux desktop app or run `spellcheck-server` before checking text.
-The extension only requests access to that local API and does not read page
-content.
+This popup sends text to the configured Spellcheck API. By default it uses
+`http://127.0.0.1:8000`; start the Linux desktop app or run
+`spellcheck-server` before checking text. To use an Azure App Service, enter its
+HTTPS URL in the Spellcheck server field. Firefox will ask permission to reach
+that Azure host. The extension does not read page content.
 
 ## Load temporarily in Firefox
 

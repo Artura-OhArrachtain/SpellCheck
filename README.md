@@ -90,6 +90,29 @@ This installs a **Spellcheck** launcher in the Linux application menu. It
 starts the local server and opens the interface in your browser. You can also
 start it from a terminal with `spellcheck-desktop`.
 
+## Azure App Service
+
+The GitHub Actions workflow deploys to an existing **Linux Python Web App**
+after tests pass on pushes to `main`. Configure a federated identity in
+Microsoft Entra for this repository's `main` branch, then add these GitHub
+Actions repository secrets:
+
+- `AZURE_CLIENT_ID`
+- `AZURE_TENANT_ID`
+- `AZURE_SUBSCRIPTION_ID`
+- `AZURE_RESOURCE_GROUP`
+- `AZURE_WEBAPP_NAME`
+
+The identity needs permission to configure and deploy the target Web App. The
+workflow configures the Web App for Python 3.12, enables App Service build
+automation, and sets the server startup command. The server binds to the App
+Service host and port automatically; on a local machine it continues to bind
+to `127.0.0.1` by default. See Microsoft's
+[OIDC setup guide](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect)
+for the identity and federated credential setup. Spelling works in the Python
+runtime; grammar checks additionally require Java 8 or newer in the App Service
+environment.
+
 ## Firefox extension
 
 The extension is in `extension/firefox`. Start the Linux app (or

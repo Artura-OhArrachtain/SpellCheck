@@ -2,7 +2,8 @@
 
 import argparse
 import json
-from http.server import BaseHTTPRequestHandler, HTTPServer
+import os
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from threading import Lock
 from urllib.parse import urlparse
 
@@ -48,7 +49,7 @@ HTML_PAGE = """<!doctype html>
 <body>
   <main>
     <h1>Spellcheck</h1>
-    <p class="muted">Check spelling and grammar locally. Your text stays on this machine.</p>
+    <p class="muted">Check spelling and grammar using your configured Spellcheck server.</p>
     <form id="check-form">
       <label for="text">Text to check</label>
       <textarea id="text" maxlength="500000" placeholder="Paste or type your text here…" required></textarea>
@@ -235,11 +236,14 @@ class SpellcheckHandler(BaseHTTPRequestHandler):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Run the Spellcheck HTTP API.")
-    parser.add_argument("--host", default="127.0.0.1", help="address to bind (default: 127.0.0.1)")
-    parser.add_argument("--port", type=int, default=8000, help="port to bind (default: 8000)")
+    azure_app_service = bool(os.environ.get("WEBSITE_SITE_NAME"))
+    default_host = "0.0.0.0" if azure_app_service else "127.0.0.1"
+    default_port = int(os.environ.get("PORT", "8000"))
+    parser.add_argument("--host", default=default_host, help="address to bind")
+    parser.add_argument("--port", type=int, default=default_port, help="port to bind")
     args = parser.parse_args(argv)
 
-    server = HTTPServer((args.host, args.port), SpellcheckHandler)
+    server = ThreadingHTTPServer((args.host, args.port), SpellcheckHandler)
     print("Spellcheck API listening on http://{}:{}".format(*server.server_address))
     try:
         server.serve_forever()

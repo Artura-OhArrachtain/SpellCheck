@@ -1,8 +1,17 @@
 const input = document.querySelector('#text');
+const apiUrl = document.querySelector('#api-url');
 const grammar = document.querySelector('#grammar');
 const button = document.querySelector('#check');
 const status = document.querySelector('#status');
 const results = document.querySelector('#results');
+
+browser.storage.local.get('apiUrl').then(saved => {
+  if (saved.apiUrl) apiUrl.value = saved.apiUrl;
+});
+
+apiUrl.addEventListener('change', () => {
+  browser.storage.local.set({ apiUrl: apiUrl.value.trim() });
+});
 
 function addGroup(title, items, format) {
   const heading = document.createElement('h2');
@@ -38,7 +47,17 @@ button.addEventListener('click', async () => {
   status.textContent = 'Checking…';
   results.replaceChildren();
   try {
-    const response = await fetch('http://127.0.0.1:8000/check', {
+    const server = new URL(apiUrl.value.trim());
+    if (server.protocol !== 'http:' && server.protocol !== 'https:') {
+      throw new Error('Use an HTTP or HTTPS Spellcheck server URL.');
+    }
+    const permission = server.origin + '/*';
+    const hasPermission = await browser.permissions.contains({ origins: [permission] });
+    if (!hasPermission && !(await browser.permissions.request({ origins: [permission] }))) {
+      throw new Error('Firefox needs permission to reach that Spellcheck server.');
+    }
+
+    const response = await fetch(new URL('/check', server.origin), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text, grammar: grammar.checked })
@@ -63,7 +82,7 @@ button.addEventListener('click', async () => {
     }
     status.textContent = 'Check complete.';
   } catch (error) {
-    status.textContent = 'Could not reach Spellcheck. Start the Linux app or run spellcheck-server first.';
+    status.textContent = error.message || 'Could not reach the Spellcheck server.';
   } finally {
     button.disabled = false;
   }
