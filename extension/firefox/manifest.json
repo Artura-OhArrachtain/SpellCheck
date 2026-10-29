@@ -14,7 +14,8 @@
     "http://127.0.0.1:8000/*"
   ],
   "optional_host_permissions": [
-    "https://*.azurewebsites.net/*"
+    "https://*/*",
+    "http://*/*"
   ],
   "browser_specific_settings": {
     "gecko": {

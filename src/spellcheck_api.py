@@ -236,8 +236,7 @@ class SpellcheckHandler(BaseHTTPRequestHandler):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Run the Spellcheck HTTP API.")
-    azure_app_service = bool(os.environ.get("WEBSITE_SITE_NAME"))
-    default_host = "0.0.0.0" if azure_app_service else "127.0.0.1"
+    default_host = "0.0.0.0" if "PORT" in os.environ else "127.0.0.1"
     default_port = int(os.environ.get("PORT", "8000"))
     parser.add_argument("--host", default=default_host, help="address to bind")
     parser.add_argument("--port", type=int, default=default_port, help="port to bind")

@@ -2,9 +2,9 @@
 
 This popup sends text to the configured Spellcheck API. By default it uses
 `http://127.0.0.1:8000`; start the Linux desktop app or run
-`spellcheck-server` before checking text. To use an Azure App Service, enter its
-HTTPS URL in the Spellcheck server field. Firefox will ask permission to reach
-that Azure host. The extension does not read page content.
+`spellcheck-server` before checking text. To use a remote server, enter its
+HTTPS URL in the Spellcheck server field. Firefox asks for permission to reach
+the configured server. The extension does not read page content.
 
 ## Load temporarily in Firefox
 

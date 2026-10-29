@@ -90,39 +90,6 @@ This installs a **Spellcheck** launcher in the Linux application menu. It
 starts the local server and opens the interface in your browser. You can also
 start it from a terminal with `spellcheck-desktop`.
 
-## Azure App Service
-
-The GitHub Actions workflow in
-[`python-app.yml`](.github/workflows/python-app.yml) deploys this project as a
-single **Linux Python Web App** after CI passes on pushes to `main`. This app
-serves both the HTTP API and its browser interface; the interface's JavaScript
-runs in the browser and does not need a separate Node.js app or runtime.
-Create a Linux Web App using the Python 3.12 stack. In Microsoft Entra, create
-an app registration or service principal and add a federated credential with
-issuer `https://token.actions.githubusercontent.com`, audience
-`api://AzureADTokenExchange`, and subject
-`repo:OWNER/REPOSITORY:ref:refs/heads/main` (replace `OWNER/REPOSITORY` with
-this GitHub repository). Grant that identity permission to configure and deploy
-the Web App. Then add these GitHub Actions repository secrets:
-
-- `AZURE_CLIENT_ID` (set this to the client ID provided for this app)
-- `AZURE_TENANT_ID`
-- `AZURE_SUBSCRIPTION_ID`
-- `AZURE_RESOURCE_GROUP`
-- `AZURE_WEBAPP_NAME`
-
-The workflow configures the Web App for Python 3.12, enables App Service build
-automation, and sets the server startup command. It deploys after a successful
-push to `main`; you can also start it manually from the Actions tab while
-selecting `main`. The server binds to the App Service host and port
-automatically; on a local machine it continues to bind to `127.0.0.1` by
-default. See Microsoft's
-[OIDC setup guide](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect)
-for the identity and federated credential setup. Spelling works in the Python
-runtime. Grammar checks also require Java 8 or newer; if Java is unavailable
-in the App Service environment, the API returns spelling results and a grammar
-availability warning.
-
 ## Firefox extension
 
 The extension is in `extension/firefox`. Start the Linux app (or
@@ -133,9 +100,9 @@ add-on is required for permanent installation.
 ## Android app
 
 The native Android client is in `android`. It connects to the same Python HTTP
-API; enter the base URL of your deployed API (for example,
-`https://YOUR_APP.azurewebsites.net`) in the app. The address is saved on the
-device. Android 6.0 or newer is required.
+API; enter the base URL of your Spellcheck server in the app. Use an HTTPS
+address for a remotely hosted server. The address is saved on the device.
+Android 6.0 or newer is required.
 
 GitHub Actions builds a debug APK and uploads it as the
 `spellcheck-android-debug` artifact. The Android workflow also prints the APK's

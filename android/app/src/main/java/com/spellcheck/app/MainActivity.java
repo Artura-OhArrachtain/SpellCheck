@@ -57,7 +57,7 @@ public final class MainActivity extends Activity {
         content.addView(apiLabel, matchWrap());
         apiUrlInput = new EditText(this);
         apiUrlInput.setSingleLine(true);
-        apiUrlInput.setHint("https://your-app.azurewebsites.net");
+        apiUrlInput.setHint("https://your-spellcheck-server.example");
         apiUrlInput.setInputType(android.text.InputType.TYPE_CLASS_TEXT
                 | android.text.InputType.TYPE_TEXT_VARIATION_URI);
         apiUrlInput.setText(getSharedPreferences(PREFS, MODE_PRIVATE)
